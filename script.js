@@ -19,3 +19,16 @@ function carregarImagem(e) {
     }
     reader.readAsDataURL(e.target.files[0]);     
 }
+
+function aumentarBrilho() {
+    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        data[i] += 50;
+        data[i + 1] += 50;
+        data[i + 2] += 50;
+    }
+
+    contexto.putImageData(imageData, 0, 0);
+}
