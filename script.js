@@ -25,10 +25,21 @@ function aumentarBrilho() {
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
-        data[i] += 50;
-        data[i + 1] += 50;
-        data[i + 2] += 50;
+        data[i] += 20;
+        data[i + 1] += 20;
+        data[i + 2] += 20;
     }
 
+    contexto.putImageData(imageData, 0, 0);
+}
+
+function diminuirBrilho() {
+    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        data[i] -= 20;
+        data[i + 1] -= 20;
+        data[i + 2] -= 20;
+    }
     contexto.putImageData(imageData, 0, 0);
 }
