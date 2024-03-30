@@ -54,3 +54,20 @@ function aplicarNegativo() {
     }
     contexto.putImageData(imageData, 0, 0);
 }
+
+function flipVertical() {
+    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const newData = new Uint8ClampedArray(data.length);
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            const verticalIndex = ((canvas.height - 1 - y) * canvas.width + x) * 4;
+            const verticalOffset = (y * canvas.width + x) * 4;
+            newData[verticalOffset] = data[verticalIndex];
+            newData[verticalOffset + 1] = data[verticalIndex + 1];
+            newData[verticalOffset + 2] = data[verticalIndex + 2];
+            newData[verticalOffset + 3] = data[verticalIndex + 3];
+        }
+    }
+    contexto.putImageData(new ImageData(newData, canvas.width, canvas.height), 0, 0);
+}
