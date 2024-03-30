@@ -15,7 +15,7 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    min-width: 100px;
+    min-width: 150px;
 }
 
 .btn {
@@ -45,7 +45,8 @@ main {
 
 .buttons {
     display: flex;
-    max-width: 500px;
+    max-width: 512px;
     justify-content: space-between;
     gap: 15px;
+    flex-wrap: wrap;
 }

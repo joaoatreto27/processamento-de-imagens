@@ -71,3 +71,20 @@ function flipVertical() {
     }
     contexto.putImageData(new ImageData(newData, canvas.width, canvas.height), 0, 0);
 }
+
+function flipHorizontal() {
+    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const newData = new Uint8ClampedArray(data.length);
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            const horizontalIndex = (y * canvas.width + (canvas.width - 1 - x)) * 4;
+            const horizontalOffset = (y * canvas.width + x) * 4;
+            newData[horizontalOffset] = data[horizontalIndex];
+            newData[horizontalOffset + 1] = data[horizontalIndex + 1];
+            newData[horizontalOffset + 2] = data[horizontalIndex + 2];
+            newData[horizontalOffset + 3] = data[horizontalIndex + 3];
+        }
+    }
+    contexto.putImageData(new ImageData(newData, canvas.width, canvas.height), 0, 0);
+}
