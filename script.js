@@ -2,6 +2,8 @@ const imgLoader = document.getElementById('img-loader');
 const uploadedImg = document.getElementById('uploaded-img');
 const canvas = document.getElementById('canvas');
 const contexto = canvas.getContext('2d');
+let flipped = false;
+let imageDataArray = [];
 
 imgLoader.addEventListener('change', carregarImagem, false);
 
@@ -13,78 +15,106 @@ function carregarImagem(e) {
             canvas.width = img.width;
             canvas.height = img.height;
             contexto.drawImage(img,0,0);
+            imageDataArray = getImageDataAsArray(contexto.getImageData(0, 0, canvas.width, canvas.height));
         }
         img.src = event.target.result;
         uploadedImg.src = event.target.result;
     }
-    reader.readAsDataURL(e.target.files[0]);     
+    reader.readAsDataURL(e.target.files[0]);
+    flipped = false;      
+}
+
+function getImageDataAsArray(imageData) {
+    const data = imageData.data;
+    const array = [];
+    for (let y = 0; y < imageData.height; y++) {
+        const row = [];
+        for (let x = 0; x < imageData.width; x++) {
+            const offset = (y * imageData.width + x) * 4;
+            row.push([data[offset], data[offset + 1], data[offset + 2], data[offset + 3]]);
+        }
+        array.push(row);
+    }
+    return array;
 }
 
 function aumentarBrilho() {
-    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] += 20;
-        data[i + 1] += 20;
-        data[i + 2] += 20;
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let i = 0; i < 3; i++) {
+                imageDataArray[y][x][i] += 20;
+                if (imageDataArray[y][x][i] > 255) {
+                    imageDataArray[y][x][i] = 255;
+                }
+            }
+        }
     }
-
-    contexto.putImageData(imageData, 0, 0);
+    desenharImagemFromArray(imageDataArray);
 }
 
 function diminuirBrilho() {
-    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] -= 20;
-        data[i + 1] -= 20;
-        data[i + 2] -= 20;
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let i = 0; i < 3; i++) {
+                imageDataArray[y][x][i] -= 20;
+                if (imageDataArray[y][x][i] < 0) {
+                    imageDataArray[y][x][i] = 0;
+                }
+            }
+        }
     }
-    contexto.putImageData(imageData, 0, 0);
+    desenharImagemFromArray(imageDataArray);
 }
 
 function aplicarNegativo() {
-    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-        data[i] = 255 - data[i];
-        data[i + 1] = 255 - data[i + 1];
-        data[i + 2] = 255 - data[i + 2];
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let i = 0; i < 3; i++) {
+                imageDataArray[y][x][i] = 255 - imageDataArray[y][x][i];
+            }
+        }
     }
-    contexto.putImageData(imageData, 0, 0);
+    desenharImagemFromArray(imageDataArray);
 }
 
 function flipVertical() {
-    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    const newData = new Uint8ClampedArray(data.length);
-    for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-            const verticalIndex = ((canvas.height - 1 - y) * canvas.width + x) * 4;
-            const verticalOffset = (y * canvas.width + x) * 4;
-            newData[verticalOffset] = data[verticalIndex];
-            newData[verticalOffset + 1] = data[verticalIndex + 1];
-            newData[verticalOffset + 2] = data[verticalIndex + 2];
-            newData[verticalOffset + 3] = data[verticalIndex + 3];
+    if(!flipped){
+        flipped = true;
+        const newData = [];
+        for (let y = 0; y < imageDataArray.length; y++) {
+            newData.push(imageDataArray[imageDataArray.length - 1 - y]);
         }
+        imageDataArray = newData;
+        desenharImagemFromArray(imageDataArray);
     }
-    contexto.putImageData(new ImageData(newData, canvas.width, canvas.height), 0, 0);
 }
 
 function flipHorizontal() {
-    const imageData = contexto.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    const newData = new Uint8ClampedArray(data.length);
-    for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-            const horizontalIndex = (y * canvas.width + (canvas.width - 1 - x)) * 4;
-            const horizontalOffset = (y * canvas.width + x) * 4;
-            newData[horizontalOffset] = data[horizontalIndex];
-            newData[horizontalOffset + 1] = data[horizontalIndex + 1];
-            newData[horizontalOffset + 2] = data[horizontalIndex + 2];
-            newData[horizontalOffset + 3] = data[horizontalIndex + 3];
+    if(!flipped) {
+        flipped = true;
+        const newData = [];
+        for (let y = 0; y < imageDataArray.length; y++) {
+            const newRow = [];
+            for (let x = 0; x < imageDataArray[y].length; x++) {
+                newRow.unshift(imageDataArray[y][x]);
+            }
+            newData.push(newRow);
+        }
+        imageDataArray = newData;
+        desenharImagemFromArray(imageDataArray);
+    }
+}
+
+function desenharImagemFromArray(array) {
+    const newImageData = contexto.createImageData(array[0].length, array.length);
+    for (let y = 0; y < array.length; y++) {
+        for (let x = 0; x < array[y].length; x++) {
+            const offset = (y * array[y].length + x) * 4;
+            newImageData.data[offset] = array[y][x][0];
+            newImageData.data[offset + 1] = array[y][x][1];
+            newImageData.data[offset + 2] = array[y][x][2];
+            newImageData.data[offset + 3] = array[y][x][3];
         }
     }
-    contexto.putImageData(new ImageData(newData, canvas.width, canvas.height), 0, 0);
+    contexto.putImageData(newImageData, 0, 0);
 }

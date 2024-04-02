@@ -50,3 +50,7 @@ main {
     gap: 15px;
     flex-wrap: wrap;
 }
+
+img, canvas {
+    width: 255px;
+}
