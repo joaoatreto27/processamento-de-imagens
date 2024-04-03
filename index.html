@@ -12,8 +12,14 @@
         <input type="file" name="img-loader" id="img-loader" accept="image/*">
 
         <div class="buttons">
-            <button onclick="aumentarBrilho()" class="btn">Aumentar Brilho</button>
-            <button onclick="diminuirBrilho()" class="btn">Diminuir Brilho</button>
+            <div class="box-brilho">
+                <button onclick="aumentarBrilho()" class="btn">Aumentar Brilho</button>
+                <input type="number" id="mais-brilho" min="1" max="254">
+            </div>
+            <div class="box-brilho">
+                <button onclick="diminuirBrilho()" class="btn">Diminuir Brilho</button>
+                <input type="number" id="menos-brilho" min="1" max="254">
+            </div>
             <button onclick="aplicarNegativo()" class="btn">Aplicar Negativo</button>
             <button onclick="flipVertical()" class="btn">Flip Vertical</button>
             <button onclick="flipHorizontal()" class="btn">Flip Horizontal</button>

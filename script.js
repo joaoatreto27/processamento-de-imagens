@@ -15,7 +15,7 @@ function carregarImagem(e) {
             canvas.width = img.width;
             canvas.height = img.height;
             contexto.drawImage(img,0,0);
-            imageDataArray = getImageDataAsArray(contexto.getImageData(0, 0, canvas.width, canvas.height));
+            imageDataArray = getImageData(contexto.getImageData(0, 0, canvas.width, canvas.height));
         }
         img.src = event.target.result;
         uploadedImg.src = event.target.result;
@@ -24,7 +24,7 @@ function carregarImagem(e) {
     flipped = false;      
 }
 
-function getImageDataAsArray(imageData) {
+function getImageData(imageData) {
     const data = imageData.data;
     const array = [];
     for (let y = 0; y < imageData.height; y++) {
@@ -39,31 +39,45 @@ function getImageDataAsArray(imageData) {
 }
 
 function aumentarBrilho() {
+    const maisBrilho = document.getElementById('mais-brilho');
+    let aumentar = parseInt(maisBrilho.value);
+
+    if (isNaN(aumentar)) {
+        aumentar = 20;
+    }
+
     for (let y = 0; y < imageDataArray.length; y++) {
         for (let x = 0; x < imageDataArray[y].length; x++) {
             for (let i = 0; i < 3; i++) {
-                imageDataArray[y][x][i] += 20;
+                imageDataArray[y][x][i] += aumentar;
                 if (imageDataArray[y][x][i] > 255) {
                     imageDataArray[y][x][i] = 255;
                 }
             }
         }
     }
-    desenharImagemFromArray(imageDataArray);
+    desenharImagem(imageDataArray);
 }
 
 function diminuirBrilho() {
+    const menosBrilho = document.getElementById('menos-brilho');
+    let diminuir = parseInt(menosBrilho.value);
+
+    if (isNaN(diminuir)) {
+        diminuir = 20;
+    }
+
     for (let y = 0; y < imageDataArray.length; y++) {
         for (let x = 0; x < imageDataArray[y].length; x++) {
             for (let i = 0; i < 3; i++) {
-                imageDataArray[y][x][i] -= 20;
+                imageDataArray[y][x][i] -= diminuir;
                 if (imageDataArray[y][x][i] < 0) {
                     imageDataArray[y][x][i] = 0;
                 }
             }
         }
     }
-    desenharImagemFromArray(imageDataArray);
+    desenharImagem(imageDataArray);
 }
 
 function aplicarNegativo() {
@@ -74,7 +88,7 @@ function aplicarNegativo() {
             }
         }
     }
-    desenharImagemFromArray(imageDataArray);
+    desenharImagem(imageDataArray);
 }
 
 function flipVertical() {
@@ -85,7 +99,7 @@ function flipVertical() {
             newData.push(imageDataArray[imageDataArray.length - 1 - y]);
         }
         imageDataArray = newData;
-        desenharImagemFromArray(imageDataArray);
+        desenharImagem(imageDataArray);
     }
 }
 
@@ -101,11 +115,11 @@ function flipHorizontal() {
             newData.push(newRow);
         }
         imageDataArray = newData;
-        desenharImagemFromArray(imageDataArray);
+        desenharImagem(imageDataArray);
     }
 }
 
-function desenharImagemFromArray(array) {
+function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
         for (let x = 0; x < array[y].length; x++) {

@@ -54,3 +54,14 @@ main {
 img, canvas {
     width: 255px;
 }
+
+.box-brilho {
+    display: flex;
+    gap: 5px;
+}
+
+.box-brilho input {
+    border-radius: 5px;
+    outline: none;
+    padding: 5px;
+}
