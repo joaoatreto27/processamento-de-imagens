@@ -23,6 +23,23 @@
             <button onclick="aplicarNegativo()" class="btn">Aplicar Negativo</button>
             <button onclick="flipVertical()" class="btn">Flip Vertical</button>
             <button onclick="flipHorizontal()" class="btn">Flip Horizontal</button>
+            <div class="box-brilho">
+                <label>X - Início:</label>
+                <input type="number" id="start-row" min="0">
+            </div>
+            <div class="box-brilho">
+                <label>X - Final:</label>
+                <input type="number" id="end-row" min="0">
+            </div>
+            <div class="box-brilho">
+                <label>Y - Início:</label>
+                <input type="number" id="start-col" min="0">
+            </div>
+            <div class="box-brilho">
+                <label>Y - Final:</label>
+                <input type="number" id="end-col" min="0">
+            </div>
+            <button onclick="realizarCorte()" class="btn">Realizar Corte</button>
         </div>
 
         <div class="resultado">

@@ -27,6 +27,8 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: all .5s;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn:hover {
@@ -58,10 +60,13 @@ img, canvas {
 .box-brilho {
     display: flex;
     gap: 5px;
+    justify-content: center;
+    align-items: center;
 }
 
 .box-brilho input {
     border-radius: 5px;
     outline: none;
     padding: 5px;
+    height: 36px;
 }

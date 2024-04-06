@@ -119,6 +119,36 @@ function flipHorizontal() {
     }
 }
 
+function realizarCorte() {
+    const startRow = parseInt(document.getElementById('start-row').value);
+    const endRow = parseInt(document.getElementById('end-row').value);
+    const startCol = parseInt(document.getElementById('start-col').value);
+    const endCol = parseInt(document.getElementById('end-col').value);
+
+    if (isNaN(startRow) || isNaN(endRow) || isNaN(startCol) || isNaN(endCol)) {
+        alert("Valores inválidos.");
+        return;
+    }
+
+    if (startRow < 0 || startRow >= imageDataArray.length || endRow < 0 || endRow >= imageDataArray.length ||
+        startCol < 0 || startCol >= imageDataArray[0].length || endCol < 0 || endCol >= imageDataArray[0].length) {
+        alert("Valores estão fora do intervalo.");
+        return;
+    }
+
+    const newImageDataArray = [];
+    for (let y = startRow; y <= endRow; y++) {
+        const newRow = [];
+        for (let x = startCol; x <= endCol; x++) {
+            newRow.push(imageDataArray[y][x]);
+        }
+        newImageDataArray.push(newRow);
+    }
+
+    imageDataArray = newImageDataArray;
+    desenharImagem(imageDataArray);
+}
+
 function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
@@ -130,5 +160,6 @@ function desenharImagem(array) {
             newImageData.data[offset + 3] = array[y][x][3];
         }
     }
+    contexto.clearRect(0, 0, canvas.width, canvas.height);
     contexto.putImageData(newImageData, 0, 0);
 }
