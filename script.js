@@ -149,6 +149,29 @@ function realizarCorte() {
     desenharImagem(imageDataArray);
 }
 
+function limiarizacao() {
+    const limiar = parseInt(document.getElementById('limiar').value);
+    const largura = canvas.width;
+    const altura = canvas.height;
+    const imageData = contexto.getImageData(0, 0, largura, altura);
+    const dados = imageData.data;
+
+    if (isNaN(limiar) || limiar < 0 || limiar > 255) {
+        alert("Insira um valor válido (0 - 255).");
+        return;
+    }
+    for (let i = 0; i < dados.length; i += 4) {
+        const cinza = (dados[i] + dados[i + 1] + dados[i + 2]) / 3;
+
+        if (cinza < limiar) {
+            dados[i] = dados[i + 1] = dados[i + 2] = 0; 
+        } else {
+            dados[i] = dados[i + 1] = dados[i + 2] = 255;
+        }
+    }
+    contexto.putImageData(imageData, 0, 0);
+}
+
 function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
