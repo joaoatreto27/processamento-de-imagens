@@ -172,6 +172,99 @@ function limiarizacao() {
     contexto.putImageData(imageData, 0, 0);
 }
 
+function equalizarHistograma() {
+    const histograma = calcularHistograma(imageDataArray);
+    const novoHistograma = equalizar(histograma, imageDataArray.length * imageDataArray[0].length);
+
+    const novaImagemDataArray = [];
+    for (let y = 0; y < imageDataArray.length; y++) {
+        const newRow = [];
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            const cinza = imageDataArray[y][x][0]; 
+            const novoTom = novoHistograma[cinza];
+            newRow.push([novoTom, novoTom, novoTom, 255]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray);
+}
+
+function calcularHistograma(imageDataArray) {
+    const histograma = new Array(256).fill(0);
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            const cinza = imageDataArray[y][x][0]; 
+            histograma[cinza]++;
+        }
+    }
+    return histograma;
+}
+
+function equalizar(histograma, totalPixels) {
+    const novoHistograma = new Array(256).fill(0);
+    let acumulado = 0;
+    for (let i = 0; i < histograma.length; i++) {
+        acumulado += histograma[i];
+        novoHistograma[i] = Math.round((acumulado * 255) / totalPixels);
+    }
+    return novoHistograma;
+}
+
+function equalizarHistograma() {
+    const histogramaOriginal = calcularHistograma(imageDataArray);
+    const novoHistograma = equalizar(histogramaOriginal, imageDataArray.length * imageDataArray[0].length);
+
+    plotarHistograma(histogramaOriginal, 'originalHistogram');
+
+    const novaImagemDataArray = [];
+    for (let y = 0; y < imageDataArray.length; y++) {
+        const newRow = [];
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            const cinza = imageDataArray[y][x][0];
+            const novoTom = novoHistograma[cinza];
+            newRow.push([novoTom, novoTom, novoTom, 255]); 
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray);
+
+    const histogramaModificado = calcularHistograma(novaImagemDataArray);
+    plotarHistograma(histogramaModificado, 'equalizedHistogram');
+}
+
+
+function plotarHistograma(histogramaData, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+
+    const labels = Array.from({ length: histogramaData.length }, (_, i) => i.toString());
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Histograma',
+            backgroundColor: 'rgba(0, 0, 255, 0.5)',
+            borderColor: 'rgba(0, 0, 255, 1)',
+            borderWidth: 1,
+            data: histogramaData,
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        },
+    };
+
+    new Chart(ctx, config);
+}
+
 function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
