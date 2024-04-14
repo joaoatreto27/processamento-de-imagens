@@ -2,10 +2,16 @@ const imgLoader = document.getElementById('img-loader');
 const uploadedImg = document.getElementById('uploaded-img');
 const canvas = document.getElementById('canvas');
 const contexto = canvas.getContext('2d');
+const imgLoader2 = document.getElementById('img-loader-2');
+const uploadedImg2 = document.getElementById('uploaded-img-2');
+const canvas2 = document.getElementById('canvas-2');
+const contexto2 = canvas2.getContext('2d');
 let flipped = false;
 let imageDataArray = [];
+let imageDataArray2 = [];
 
 imgLoader.addEventListener('change', carregarImagem, false);
+imgLoader2.addEventListener('change', carregarSegundaImagem, false);
 
 function carregarImagem(e) {
     const reader = new FileReader();
@@ -22,6 +28,22 @@ function carregarImagem(e) {
     }
     reader.readAsDataURL(e.target.files[0]);
     flipped = false;      
+}
+
+function carregarSegundaImagem(e) {
+    const reader = new FileReader();
+    reader.onload = function(event){
+        const img = new Image();
+        img.onload = function(){
+            canvas2.width = img.width;
+            canvas2.height = img.height;
+            contexto2.drawImage(img, 0, 0);
+            imageDataArray2 = getImageData(contexto2.getImageData(0, 0, canvas2.width, canvas2.height));
+        }
+        img.src = event.target.result;
+        uploadedImg2.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
 }
 
 function getImageData(imageData) {
@@ -263,6 +285,39 @@ function plotarHistograma(histogramaData, canvasId) {
     };
 
     new Chart(ctx, config);
+}
+
+function somarImagens() {
+    if (imageDataArray.length === 0 || imageDataArray2.length === 0) {
+        alert("Carregue ambas as imagens antes de somar.");
+        return;
+    }
+
+    if (imageDataArray.length !== imageDataArray2.length || imageDataArray[0].length !== imageDataArray2[0].length) {
+        alert("As dimensões das imagens são diferentes. As imagens precisam ter as mesmas dimensões para serem somadas.");
+        return;
+    }
+
+    const largura = Math.min(imageDataArray[0].length, imageDataArray2[0].length);
+    const altura = Math.min(imageDataArray.length, imageDataArray2.length);
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const novaCor = [];
+            for (let i = 0; i < 3; i++) {
+                let soma = imageDataArray[y][x][i] + imageDataArray2[y][x][i];
+                soma = soma > 255 ? 255 : soma;
+                novaCor.push(soma);
+            }
+            novaCor.push(255);
+            newRow.push(novaCor);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray);
 }
 
 function desenharImagem(array) {

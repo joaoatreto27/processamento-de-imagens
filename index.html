@@ -12,6 +12,9 @@
         <label for="img-loader" class="btn">Carregar Imagem</label>
         <input type="file" name="img-loader" id="img-loader" accept="image/*">
 
+        <label for="img-loader-2" class="btn">Carregar Segunda Imagem</label>
+        <input type="file" name="img-loader-2" id="img-loader-2" accept="image/*">
+
         <div class="buttons">
             <div class="box-brilho">
                 <button onclick="aumentarBrilho()" class="btn">Aumentar Brilho</button>
@@ -46,10 +49,12 @@
                 <input type="number" id="limiar" min="0" max="255">
             </div>
             <button onclick="equalizarHistograma()" class="btn">Equalizar Histograma</button>
+            <button onclick="somarImagens()" class="btn">Somar Imagens</button>
         </div>
 
         <div class="resultado">
             <img id="uploaded-img" src="#" alt="Imagem Carregada">
+            <canvas id="canvas-2"></canvas>
             <canvas id="canvas"></canvas>
         </div>
         <canvas id="originalHistogram"></canvas>
