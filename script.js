@@ -320,6 +320,54 @@ function somarImagens() {
     desenharImagem(novaImagemDataArray);
 }
 
+function aplicarOperacaoLogica(operacao) {
+    const height = imageDataArray.length;
+    const width = imageDataArray[0].length;
+
+    if (height !== imageDataArray2.length || width !== imageDataArray2[0].length) {
+        alert("As imagens precisam ter as mesmas dimensões para a operação lógica!");
+        return;
+    }
+
+    const isBinaryImage = imageDataArray.every(row => row.every(pixel => pixel.every(value => value === 0 || value === 255)));
+    const isBinaryImage2 = imageDataArray2.every(row => row.every(pixel => pixel.every(value => value === 0 || value === 255)));
+
+    if (!isBinaryImage || !isBinaryImage2) {
+        alert("As imagens devem ser binárias para aplicar operações lógicas.");
+        return;
+    }
+
+    const resultData = [];
+    for (let y = 0; y < height; y++) {
+        const newRow = [];
+        for (let x = 0; x < width; x++) {
+            const newPixel = [];
+            for (let i = 0; i < 3; i++) {
+                let value;
+                switch (operacao) {
+                    case 'and':
+                        value = imageDataArray[y][x][i] & imageDataArray2[y][x][i];
+                        break;
+                    case 'or':
+                        value = imageDataArray[y][x][i] | imageDataArray2[y][x][i];
+                        break;
+                    case 'not':
+                        value = 255 - imageDataArray[y][x][i]; 
+                        break;
+                    case 'xor':
+                        value = imageDataArray[y][x][i] ^ imageDataArray2[y][x][i];
+                        break;
+                }
+                newPixel.push(value);
+            }
+            newRow.push(newPixel);
+        }
+        resultData.push(newRow);
+    }
+
+    desenharImagem(resultData, contexto2, canvas2);
+}
+
 function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
@@ -328,7 +376,7 @@ function desenharImagem(array) {
             newImageData.data[offset] = array[y][x][0];
             newImageData.data[offset + 1] = array[y][x][1];
             newImageData.data[offset + 2] = array[y][x][2];
-            newImageData.data[offset + 3] = array[y][x][3];
+            newImageData.data[offset + 3] = 255;
         }
     }
     contexto.clearRect(0, 0, canvas.width, canvas.height);
