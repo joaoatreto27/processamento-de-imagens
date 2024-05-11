@@ -368,6 +368,46 @@ function aplicarOperacaoLogica(operacao) {
     desenharImagem(resultData, contexto2, canvas2);
 }
 
+function combinacaoLinear() {
+    if (imageDataArray.length === 0 || imageDataArray2.length === 0) {
+        alert("Carregue ambas as imagens antes de combinar.");
+        return;
+    }
+
+    if (imageDataArray.length !== imageDataArray2.length || imageDataArray[0].length !== imageDataArray2[0].length) {
+        alert("As dimensões das imagens são diferentes. As imagens precisam ter as mesmas dimensões para serem combinadas.");
+        return;
+    }
+
+    const largura = Math.min(imageDataArray[0].length, imageDataArray2[0].length);
+    const altura = Math.min(imageDataArray.length, imageDataArray2.length);
+    const novaImagemDataArray = [];
+
+    const alpha = parseFloat(prompt("Insira o valor:"));
+
+    if (isNaN(alpha) || alpha < 0 || alpha > 1) {
+        alert("Insira um valor válido (entre 0 e 1).");
+        return;
+    }
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const novaCor = [];
+            for (let i = 0; i < 3; i++) {
+                let valor = Math.round(alpha * imageDataArray[y][x][i] + (1 - alpha) * imageDataArray2[y][x][i]);
+                valor = valor > 255 ? 255 : valor;
+                novaCor.push(valor);
+            }
+            novaCor.push(255);
+            newRow.push(novaCor);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray);
+}
+
 function desenharImagem(array) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
