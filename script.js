@@ -78,7 +78,7 @@ function aumentarBrilho() {
             }
         }
     }
-    desenharImagem(imageDataArray);
+    desenharImagem(imageDataArray, contexto, canvas);
 }
 
 function diminuirBrilho() {
@@ -99,7 +99,7 @@ function diminuirBrilho() {
             }
         }
     }
-    desenharImagem(imageDataArray);
+    desenharImagem(imageDataArray, contexto, canvas);
 }
 
 function aplicarNegativo() {
@@ -110,7 +110,7 @@ function aplicarNegativo() {
             }
         }
     }
-    desenharImagem(imageDataArray);
+    desenharImagem(imageDataArray, contexto, canvas);
 }
 
 function flipVertical() {
@@ -121,7 +121,7 @@ function flipVertical() {
             newData.push(imageDataArray[imageDataArray.length - 1 - y]);
         }
         imageDataArray = newData;
-        desenharImagem(imageDataArray);
+        desenharImagem(imageDataArray, contexto, canvas);
     }
 }
 
@@ -137,7 +137,7 @@ function flipHorizontal() {
             newData.push(newRow);
         }
         imageDataArray = newData;
-        desenharImagem(imageDataArray);
+        desenharImagem(imageDataArray, contexto, canvas);
     }
 }
 
@@ -168,7 +168,7 @@ function realizarCorte() {
     }
 
     imageDataArray = newImageDataArray;
-    desenharImagem(imageDataArray);
+    desenharImagem(imageDataArray, contexto, canvas);
 }
 
 function limiarizacao() {
@@ -208,7 +208,7 @@ function equalizarHistograma() {
         }
         novaImagemDataArray.push(newRow);
     }
-    desenharImagem(novaImagemDataArray);
+    desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
 function calcularHistograma(imageDataArray) {
@@ -317,7 +317,7 @@ function somarImagens() {
         novaImagemDataArray.push(newRow);
     }
 
-    desenharImagem(novaImagemDataArray);
+    desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
 function aplicarOperacaoLogica(operacao) {
@@ -365,7 +365,7 @@ function aplicarOperacaoLogica(operacao) {
         resultData.push(newRow);
     }
 
-    desenharImagem(resultData, contexto2, canvas2);
+    desenharImagem(resultData, contexto, canvas);
 }
 
 function combinacaoLinear() {
@@ -405,10 +405,71 @@ function combinacaoLinear() {
         novaImagemDataArray.push(newRow);
     }
 
-    desenharImagem(novaImagemDataArray);
+    desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
-function desenharImagem(array) {
+function concatenarImagens() {
+    if (imageDataArray.length === 0 || imageDataArray2.length === 0) {
+        alert("Carregue ambas as imagens antes de concatenar.");
+        return;
+    }
+
+    if (imageDataArray.length !== imageDataArray2.length || imageDataArray[0].length !== imageDataArray2[0].length) {
+        alert("As dimensões das imagens são diferentes. As imagens precisam ter as mesmas dimensões para serem combinadas.");
+        return;
+    }
+
+    const linhas = parseInt(prompt("Digite o número de linhas para a concatenação:"));
+    const colunas = parseInt(prompt("Digite o número de colunas para a concatenação:"));
+
+    if (isNaN(linhas) || isNaN(colunas) || linhas <= 0 || colunas <= 0) {
+        alert("Por favor, insira um número válido de linhas e colunas.");
+        return;
+    }
+
+    const alturaMaxima = Math.max(imageDataArray.length, imageDataArray2.length);
+    const larguraMaxima = imageDataArray[0].length + imageDataArray2[0].length;
+
+    const alturaResultado = alturaMaxima * linhas;
+    const larguraResultado = larguraMaxima * colunas;
+
+    canvas.width = larguraResultado;
+    canvas.height = alturaResultado;
+
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < alturaResultado; y++) {
+        const newRow = [];
+        for (let x = 0; x < larguraResultado; x++) {
+            newRow.push([0, 0, 0, 0]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let linha = 0; linha < linhas; linha++) {
+                for (let coluna = 0; coluna < colunas; coluna++) {
+                    novaImagemDataArray[y + (linha * alturaMaxima)][x + (coluna * larguraMaxima)] = imageDataArray[y][x];
+                }
+            }
+        }
+    }
+
+    for (let y = 0; y < imageDataArray2.length; y++) {
+        for (let x = 0; x < imageDataArray2[y].length; x++) {
+            for (let linha = 0; linha < linhas; linha++) {
+                for (let coluna = 0; coluna < colunas; coluna++) {
+                    novaImagemDataArray[y + (linha * alturaMaxima)][x + (coluna * larguraMaxima) + imageDataArray[0].length] = imageDataArray2[y][x];
+                }
+            }
+        }
+    }
+
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
+function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
         for (let x = 0; x < array[y].length; x++) {
