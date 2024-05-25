@@ -524,6 +524,43 @@ function filtragemMaxima() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function filtragemMedia() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    const filtro = [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+    ];
+    const filtroSoma = 9;
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            let soma = [0, 0, 0];
+
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const pixelX = x + j;
+                    const pixelY = y + i;
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        for (let k = 0; k < 3; k++) {
+                            soma[k] += imageDataArray[pixelY][pixelX][k] * filtro[i + 1][j + 1];
+                        }
+                    }
+                }
+            }
+            const media = soma.map(v => v / filtroSoma);
+            newRow.push([...media, 255]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
