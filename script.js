@@ -249,7 +249,7 @@ function equalizarHistograma() {
         novaImagemDataArray.push(newRow);
     }
 
-    desenharImagem(novaImagemDataArray);
+    desenharImagem(novaImagemDataArray, contexto, canvas);
 
     const histogramaModificado = calcularHistograma(novaImagemDataArray);
     plotarHistograma(histogramaModificado, 'equalizedHistogram');
@@ -466,6 +466,33 @@ function concatenarImagens() {
         }
     }
 
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
+function filtragemMinima() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            let minimo = imageDataArray[y][x].slice(0, 3);
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const pixelX = x + j;
+                    const pixelY = y + i;
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        for (let k = 0; k < 3; k++) {
+                            minimo[k] = Math.min(minimo[k], imageDataArray[pixelY][pixelX][k]);
+                        }
+                    }
+                }
+            }
+            newRow.push([...minimo, 255]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
