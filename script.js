@@ -636,6 +636,44 @@ function filtragemPorOrdem(ordem) {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function suavizacaoConservativa() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const vizinhos = [[], [], []];
+
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const pixelX = x + j;
+                    const pixelY = y + i;
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        for (let k = 0; k < 3; k++) {
+                            vizinhos[k].push(imageDataArray[pixelY][pixelX][k]);
+                        }
+                    }
+                }
+            }
+            const minValores = vizinhos.map(channel => Math.min(...channel));
+            const maxValores = vizinhos.map(channel => Math.max(...channel));
+
+            const novoPixel = [];
+            for (let k = 0; k < 3; k++) {
+                const valorAtual = imageDataArray[y][x][k];
+                const novoValor = Math.min(Math.max(valorAtual, minValores[k]), maxValores[k]);
+                novoPixel.push(novoValor);
+            }
+            newRow.push([...novoPixel, 255]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
