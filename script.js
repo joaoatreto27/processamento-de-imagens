@@ -593,6 +593,49 @@ function filtragemMediana() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function aplicarFiltragemPorOrdem() {
+    const ordemInput = document.getElementById("ordemInput").value;
+    const ordem = parseInt(ordemInput, 10);
+
+    if (isNaN(ordem) || ordem < 0 || ordem > 8) {
+        alert("Insira um valor válido para a ordem (entre 0 e 8).");
+        return;
+    }
+    filtragemPorOrdem(ordem);
+}
+
+function filtragemPorOrdem(ordem) {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const vizinhos = [[], [], []];
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const pixelX = x + j;
+                    const pixelY = y + i;
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        for (let k = 0; k < 3; k++) {
+                            vizinhos[k].push(imageDataArray[pixelY][pixelX][k]);
+                        }
+                    }
+                }
+            }
+            const resultado = vizinhos.map(channel => {
+                channel.sort((a, b) => a - b);
+                return channel[Math.max(0, Math.min(ordem, channel.length - 1))];
+            });
+
+            newRow.push([...resultado, 255]);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
