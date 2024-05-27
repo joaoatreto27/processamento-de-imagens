@@ -674,6 +674,72 @@ function suavizacaoConservativa() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function criarKernelGaussiano(tamanho, sigma) {
+    const kernel = [];
+    const meio = Math.floor(tamanho / 2);
+    const fator = 1 / (2 * Math.PI * sigma * sigma);
+    let soma = 0;
+
+    for (let y = -meio; y <= meio; y++) {
+        const linha = [];
+        for (let x = -meio; x <= meio; x++) {
+            const valor = fator * Math.exp(-(x * x + y * y) / (2 * sigma * sigma));
+            linha.push(valor);
+            soma += valor;
+        }
+        kernel.push(linha);
+    }
+    for (let y = 0; y < tamanho; y++) {
+        for (let x = 0; x < tamanho; x++) {
+            kernel[y][x] /= soma;
+        }
+    }
+    return kernel;
+}
+
+function filtroGaussiano() {
+    const tamanhoKernel = 5;
+    const sigma = 1.0;
+    const kernel = criarKernelGaussiano(tamanhoKernel, sigma);
+    const meio = Math.floor(tamanhoKernel / 2);
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const somaPixel = [0, 0, 0];
+
+            for (let ky = -meio; ky <= meio; ky++) {
+                for (let kx = -meio; kx <= meio; kx++) {
+                    const pixelY = y + ky;
+                    const pixelX = x + kx;
+
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        const peso = kernel[ky + meio][kx + meio];
+                        const pixel = imageDataArray[pixelY][pixelX];
+
+                        somaPixel[0] += pixel[0] * peso;
+                        somaPixel[1] += pixel[1] * peso;
+                        somaPixel[2] += pixel[2] * peso;
+                    }
+                }
+            }
+            const novoPixel = [
+                Math.min(255, Math.max(0, Math.round(somaPixel[0]))),
+                Math.min(255, Math.max(0, Math.round(somaPixel[1]))),
+                Math.min(255, Math.max(0, Math.round(somaPixel[2]))),
+                255
+            ];
+
+            newRow.push(novoPixel);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
