@@ -792,6 +792,59 @@ function filtroPrewitt() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function filtroSobel() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    const mascaraSobelX = [
+        [1, 0, -1],
+        [2, 0, -2],
+        [1, 0, -1]
+    ];
+
+    const mascaraSobelY = [
+        [1, 2, 1],
+        [0, 0, 0],
+        [-1, -2, -1]
+    ];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            let somaX = 0;
+            let somaY = 0;
+
+            for (let ky = -1; ky <= 1; ky++) {
+                for (let kx = -1; kx <= 1; kx++) {
+                    const pixelY = y + ky;
+                    const pixelX = x + kx;
+
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        const pixel = imageDataArray[pixelY][pixelX];
+                        const intensidade = (pixel[0] + pixel[1] + pixel[2]) / 3;
+
+                        somaX += intensidade * mascaraSobelX[ky + 1][kx + 1];
+                        somaY += intensidade * mascaraSobelY[ky + 1][kx + 1];
+                    }
+                }
+            }
+
+            const magnitude = Math.sqrt(somaX * somaX + somaY * somaY);
+            const novoPixel = [
+                Math.min(255, Math.max(0, Math.round(magnitude))),
+                Math.min(255, Math.max(0, Math.round(magnitude))),
+                Math.min(255, Math.max(0, Math.round(magnitude))),
+                255
+            ];
+
+            newRow.push(novoPixel);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
