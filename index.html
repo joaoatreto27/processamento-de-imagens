@@ -61,12 +61,13 @@
             <button onclick="filtragemMedia()" class="btn">Filtragem por Média</button>
             <button onclick="filtragemMediana()" class="btn">Filtragem por Mediana</button>
             <div class="box-brilho">
-                <button onclick="aplicarFiltragemPorOrdem()" class="btn">Aplicar Filtragem por Ordem</button>
+                <button onclick="aplicarFiltragemPorOrdem()" class="btn">Filtragem por Ordem</button>
                 <label for="ordemInput">Escolha o valor da ordem (0 a 8):</label>
                 <input type="number" id="ordemInput" name="ordemInput" min="0" max="8" value="0">
             </div>
             <button onclick="suavizacaoConservativa()" class="btn">Suavização Conservativa</button>
-            <button onclick="filtroGaussiano()" class="btn">Aplicar Filtro Gaussiano</button>
+            <button onclick="filtroGaussiano()" class="btn">Filtro Gaussiano</button>
+            <button onclick="filtroPrewitt()" class="btn">Filtro Prewitt</button>
         </div>
 
         <div class="resultado">
