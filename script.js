@@ -845,6 +845,50 @@ function filtroSobel() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function filtroLaplaciano() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    const mascaraLaplaciana = [
+        [0, -1, 0],
+        [-1, 4, -1],
+        [0, -1, 0]
+    ];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            let soma = 0;
+
+            for (let ky = -1; ky <= 1; ky++) {
+                for (let kx = -1; kx <= 1; kx++) {
+                    const pixelY = y + ky;
+                    const pixelX = x + kx;
+
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        const pixel = imageDataArray[pixelY][pixelX];
+                        const intensidade = (pixel[0] + pixel[1] + pixel[2]) / 3;
+
+                        soma += intensidade * mascaraLaplaciana[ky + 1][kx + 1];
+                    }
+                }
+            }
+            const intensidadeNormalizada = Math.min(255, Math.max(0, Math.round((soma + 255) / 2)));
+            const novoPixel = [
+                intensidadeNormalizada,
+                intensidadeNormalizada,
+                intensidadeNormalizada,
+                255
+            ];
+
+            newRow.push(novoPixel);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
