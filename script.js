@@ -992,6 +992,14 @@ function abertura() {
     desenharImagem(imagemAbertura, contexto, canvas);
 }
 
+function fechamento() {
+    const imagemDilatacao = aplicarDilatacao(imageDataArray);
+    const imagemFechamento = aplicarErosao(imagemDilatacao);
+
+    desenharImagem(imagemFechamento, contexto, canvas);
+}
+
+
 function aplicarErosao(dataArray) {
     const altura = dataArray.length;
     const largura = dataArray[0].length;
