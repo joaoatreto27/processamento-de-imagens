@@ -937,6 +937,54 @@ function dilatacao() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function erosao() {
+    const altura = imageDataArray.length;
+    const largura = imageDataArray[0].length;
+    const novaImagemDataArray = [];
+
+    const elementoEstruturante = [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+    ];
+    const tamanhoMascara = elementoEstruturante.length;
+    const offset = Math.floor(tamanhoMascara / 2);
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            let minValor = 255;
+
+            for (let ky = -offset; ky <= offset; ky++) {
+                for (let kx = -offset; kx <= offset; kx++) {
+                    const pixelY = y + ky;
+                    const pixelX = x + kx;
+
+                    if (pixelX >= 0 && pixelX < largura && pixelY >= 0 && pixelY < altura) {
+                        const pixel = imageDataArray[pixelY][pixelX];
+                        const intensidade = (pixel[0] + pixel[1] + pixel[2]) / 3;
+
+                        if (elementoEstruturante[ky + offset][kx + offset] === 1) {
+                            minValor = Math.min(minValor, intensidade);
+                        }
+                    }
+                }
+            }
+
+            const novoPixel = [
+                minValor,
+                minValor,
+                minValor,
+                255
+            ];
+
+            newRow.push(novoPixel);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
