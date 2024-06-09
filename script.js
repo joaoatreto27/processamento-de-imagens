@@ -1196,6 +1196,17 @@ function contorno() {
     desenharImagem(contorno, contexto, canvas);
 }
 
+function salvarImagem() {
+    const randomNumber = Math.floor(Math.random() * 1000000);
+    const fileName = `imagem_processada_${randomNumber}.png`;
+    const link = document.createElement('a');
+    
+    link.download = fileName; 
+    link.href = canvas.toDataURL(); 
+    link.click();
+}
+
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {

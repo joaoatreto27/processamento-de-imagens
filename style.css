@@ -157,3 +157,7 @@ img, canvas {
     display: flex;
     gap: 50px;
 }
+
+.resultado button {
+    width: 100%;
+}
