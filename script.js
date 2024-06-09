@@ -364,6 +364,39 @@ function somarImagens() {
     desenharImagem(novaImagemDataArray, contexto, canvas);
 }
 
+function subtrairImagens() {
+    if (imageDataArray.length === 0 || imageDataArray2.length === 0) {
+        alert("Carregue ambas as imagens antes de subtrair.");
+        return;
+    }
+
+    if (imageDataArray.length !== imageDataArray2.length || imageDataArray[0].length !== imageDataArray2[0].length) {
+        alert("As dimensões das imagens são diferentes. As imagens precisam ter as mesmas dimensões para serem subtraídas.");
+        return;
+    }
+
+    const largura = Math.min(imageDataArray[0].length, imageDataArray2[0].length);
+    const altura = Math.min(imageDataArray.length, imageDataArray2.length);
+    const novaImagemDataArray = [];
+
+    for (let y = 0; y < altura; y++) {
+        const newRow = [];
+        for (let x = 0; x < largura; x++) {
+            const novaCor = [];
+            for (let i = 0; i < 3; i++) {
+                let diferenca = imageDataArray[y][x][i] - imageDataArray2[y][x][i];
+                diferenca = diferenca < 0 ? 0 : diferenca;
+                novaCor.push(diferenca);
+            }
+            novaCor.push(255);
+            newRow.push(novaCor);
+        }
+        novaImagemDataArray.push(newRow);
+    }
+
+    desenharImagem(novaImagemDataArray, contexto, canvas);
+}
+
 function aplicarOperacaoLogica(operacao) {
     const height = imageDataArray.length;
     const width = imageDataArray[0].length;
