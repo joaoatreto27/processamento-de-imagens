@@ -1098,6 +1098,27 @@ function aplicarDilatacao(dataArray) {
     return novaImagemDataArray;
 }
 
+function contorno() {
+    const imagemDilatada = aplicarDilatacao(imageDataArray);
+    const imagemErodida = aplicarErosao(imageDataArray);
+
+    const contorno = [];
+    for (let y = 0; y < imageDataArray.length; y++) {
+        const newRow = [];
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            const diff = [];
+            for (let i = 0; i < 3; i++) {
+                const diffValue = imagemDilatada[y][x][i] - imagemErodida[y][x][i];
+                diff.push(diffValue < 0 ? 0 : diffValue);
+            }
+            diff.push(255);
+            newRow.push(diff);
+        }
+        contorno.push(newRow);
+    }
+    desenharImagem(contorno, contexto, canvas);
+}
+
 function desenharImagem(array, contexto, canvas) {
     const newImageData = contexto.createImageData(array[0].length, array.length);
     for (let y = 0; y < array.length; y++) {
