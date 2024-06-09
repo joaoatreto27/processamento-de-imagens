@@ -9,89 +9,127 @@
 </head>
 <body>
     <main>
-        <label for="img-loader" class="btn">Carregar Imagem</label>
+        <label for="img-loader" class="btn">Carregar Imagem A</label>
         <input type="file" name="img-loader" id="img-loader" accept="image/*">
 
-        <label for="img-loader-2" class="btn">Carregar Segunda Imagem</label>
+        <label for="img-loader-2" class="btn">Carregar Imagem B</label>
         <input type="file" name="img-loader-2" id="img-loader-2" accept="image/*">
 
         <div class="buttons">
-            <div class="box-brilho">
-                <button onclick="aumentarBrilho()" class="btn">Aumentar Brilho</button>
-                <input type="number" id="mais-brilho" min="1" max="254">
+            <h3>Operações Aritméticas</h3>
+            <div class="aritmetica">
+                <div class="box-brilho">
+                    <button onclick="aumentarBrilho()" class="btn">Adição</button>
+                    <input type="number" id="mais-brilho" min="1" max="254">
+                </div>
+                <div class="box-brilho">
+                    <button onclick="diminuirBrilho()" class="btn">Subtração</button>
+                    <input type="number" id="menos-brilho" min="1" max="254">
+                </div>
+                <div class="box-brilho">
+                    <button onclick="multiplicacao()" class="btn">Multiplicação</button>
+                    <input type="number" id="multiplicador-brilho" min="0" step="0.1">
+                </div>
+                <div class="box-brilho">
+                    <button onclick="divisao()" class="btn">Divisão</button>
+                    <input type="number" id="divisor-brilho" min="0" step="0.1">
+                </div>
+                <button onclick="aplicarNegativo()" class="btn">Aplicar Negativo</button>
             </div>
-            <div class="box-brilho">
-                <button onclick="diminuirBrilho()" class="btn">Diminuir Brilho</button>
-                <input type="number" id="menos-brilho" min="1" max="254">
+            <h3>Modificações</h3>
+            <div class="modificacoes">
+                <button onclick="flipVertical()" class="btn">Flip Vertical</button>
+                <button onclick="flipHorizontal()" class="btn">Flip Horizontal</button>
+                <div class="box-brilho">
+                    <label>X - Início:</label>
+                    <input type="number" id="start-row" min="0">
+                </div>
+                <div class="box-brilho">
+                    <label>X - Final:</label>
+                    <input type="number" id="end-row" min="0">
+                </div>
+                <div class="box-brilho">
+                    <label>Y - Início:</label>
+                    <input type="number" id="start-col" min="0">
+                </div>
+                <div class="box-brilho">
+                    <label>Y - Final:</label>
+                    <input type="number" id="end-col" min="0">
+                </div>
+                <button onclick="realizarCorte()" class="btn">Realizar Corte</button>
             </div>
-            <div class="box-brilho">
-                <button onclick="multiplicacao()" class="btn">Multiplicação</button>
-                <input type="number" id="multiplicador-brilho" min="0" step="0.1">
+            <h3>Operações Lógicas</h3>
+            <div class="box">
+                <div class="logicas">
+                    <button onclick="aplicarOperacaoLogica('and')" class="btn">AND</button>
+                    <button onclick="aplicarOperacaoLogica('or')" class="btn">OR</button>
+                    <button onclick="aplicarOperacaoLogica('not')" class="btn">NOT</button>
+                    <button onclick="aplicarOperacaoLogica('xor')" class="btn">XOR</button>
+                </div>
+                <div class="box-brilho">
+                    <button onclick="limiarizacao()" class="btn">Limiarização</button>
+                    <input type="number" id="limiar" min="0" max="255">
+                </div>
+                <button onclick="equalizarHistograma()" class="btn">Equalizar Histograma</button>
+                <button onclick="combinacaoLinear()" class="btn">Combinação Linear</button>
             </div>
-            <div class="box-brilho">
-                <button onclick="divisao()" class="btn">Divisão</button>
-                <input type="number" id="divisor-brilho" min="0" step="0.1">
+            <h3>Realce de Imagens</h3>
+            <div class="realce">
+                <button onclick="filtragemMinima()" class="btn">Filtragem por Mínimo</button>
+                <button onclick="filtragemMaxima()" class="btn">Filtragem por Máximo</button>
+                <button onclick="filtragemMedia()" class="btn">Filtragem por Média</button>
+                <button onclick="filtragemMediana()" class="btn">Filtragem por Mediana</button>
+                <div class="box-brilho">
+                    <button onclick="aplicarFiltragemPorOrdem()" class="btn">Filtragem por Ordem</button>
+                    <input type="number" id="ordemInput" name="ordemInput" min="0" max="8" value="0">
+                </div>
+                <button onclick="suavizacaoConservativa()" class="btn">Suavização Conservativa</button>
+                <button onclick="filtroGaussiano()" class="btn">Filtro Gaussiano</button>
             </div>
-            <button onclick="aplicarNegativo()" class="btn">Aplicar Negativo</button>
-            <button onclick="flipVertical()" class="btn">Flip Vertical</button>
-            <button onclick="flipHorizontal()" class="btn">Flip Horizontal</button>
-            <div class="box-brilho">
-                <label>X - Início:</label>
-                <input type="number" id="start-row" min="0">
+            <h3>Detecção de Bordas</h3>
+            <div class="box">
+                <div class="bordas">
+                    <button onclick="filtroPrewitt()" class="btn">Filtro Prewitt</button>
+                    <button onclick="filtroSobel()" class="btn">Filtro Sobel</button>
+                    <button onclick="filtroLaplaciano()" class="btn">Filtro Laplaciano</button>
+                </div>
+                <button onclick="concatenarImagens()" class="btn">Concatenar Imagens</button>
+                <button onclick="somarImagens()" class="btn">Somar Imagens</button>
             </div>
-            <div class="box-brilho">
-                <label>X - Final:</label>
-                <input type="number" id="end-row" min="0">
+            <h3>Opereções Morfológicas</h3>
+            <div class="morfologicas">
+                <button onclick="dilatacao()" class="btn">Dilatação</button>
+                <button onclick="erosao()" class="btn">Erosão</button>
+                <button onclick="abertura()" class="btn">Abertura</button>
+                <button onclick="fechamento()" class="btn">Fechamento</button>
+                <button onclick="contorno()" class="btn">Contorno</button>
             </div>
-            <div class="box-brilho">
-                <label>Y - Início:</label>
-                <input type="number" id="start-col" min="0">
-            </div>
-            <div class="box-brilho">
-                <label>Y - Final:</label>
-                <input type="number" id="end-col" min="0">
-            </div>
-            <button onclick="realizarCorte()" class="btn">Realizar Corte</button>
-            <div class="box-brilho">
-                <button onclick="limiarizacao()" class="btn">Limiarização</button>
-                <input type="number" id="limiar" min="0" max="255">
-            </div>
-            <button onclick="equalizarHistograma()" class="btn">Equalizar Histograma</button>
-            <button onclick="somarImagens()" class="btn">Somar Imagens</button>
-            <button onclick="aplicarOperacaoLogica('and')" class="btn">AND</button>
-            <button onclick="aplicarOperacaoLogica('or')" class="btn">OR</button>
-            <button onclick="aplicarOperacaoLogica('not')" class="btn">NOT</button>
-            <button onclick="aplicarOperacaoLogica('xor')" class="btn">XOR</button>
-            <button onclick="combinacaoLinear()" class="btn">Combinação Linear</button>
-            <button onclick="concatenarImagens()" class="btn">Concatenar Imagens</button>
-            <button onclick="filtragemMinima()" class="btn">Filtragem por Mínimo</button>
-            <button onclick="filtragemMaxima()" class="btn">Filtragem por Máximo</button>
-            <button onclick="filtragemMedia()" class="btn">Filtragem por Média</button>
-            <button onclick="filtragemMediana()" class="btn">Filtragem por Mediana</button>
-            <div class="box-brilho">
-                <button onclick="aplicarFiltragemPorOrdem()" class="btn">Filtragem por Ordem</button>
-                <label for="ordemInput">Escolha o valor da ordem (0 a 8):</label>
-                <input type="number" id="ordemInput" name="ordemInput" min="0" max="8" value="0">
-            </div>
-            <button onclick="suavizacaoConservativa()" class="btn">Suavização Conservativa</button>
-            <button onclick="filtroGaussiano()" class="btn">Filtro Gaussiano</button>
-            <button onclick="filtroPrewitt()" class="btn">Filtro Prewitt</button>
-            <button onclick="filtroSobel()" class="btn">Filtro Sobel</button>
-            <button onclick="filtroLaplaciano()" class="btn">Filtro Laplaciano</button>
-            <button onclick="dilatacao()" class="btn">Dilatação</button>
-            <button onclick="erosao()" class="btn">Erosão</button>
-            <button onclick="abertura()" class="btn">Abertura</button>
-            <button onclick="fechamento()" class="btn">Fechamento</button>
-            <button onclick="contorno()" class="btn">Contorno</button>
         </div>
 
         <div class="resultado">
-            <img id="uploaded-img" src="#" alt="Imagem Carregada">
-            <canvas id="canvas-2"></canvas>
-            <canvas id="canvas"></canvas>
+            <div>
+                <h5>Imagem A</h5>
+                <img id="uploaded-img" src="#">
+            </div>
+            <div>
+                <h5>Imagem B</h5>
+                <canvas id="canvas-2"></canvas>
+            </div>
+            <div>
+                <h5>Resultado</h5>
+                <canvas id="canvas"></canvas>
+            </div>
         </div>
-        <canvas id="originalHistogram"></canvas>
-        <canvas id="equalizedHistogram"></canvas>
+        <div id="graficos">
+            <div>
+                <h5>Imagem A</h5>
+                <canvas id="originalHistogram"></canvas>
+            </div>
+            <div>
+                <h5>Imagem Equalizada</h5>
+                <canvas id="equalizedHistogram"></canvas>
+            </div>
+        </div>
     </main>
     <script src="./script.js"></script>
 </body>

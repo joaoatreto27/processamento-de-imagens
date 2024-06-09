@@ -44,6 +44,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: 80vw;
 }
 
 .buttons {
@@ -70,4 +71,89 @@ img, canvas {
     outline: none;
     padding: 5px;
     height: 36px;
+    width: 100px;
+}
+
+.aritmetica {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.aritmetica input {
+    width: 100px;
+}
+
+.aritmetica button,
+.modificacoes button {
+    width: 140px;
+    height: 36px;
+}
+
+.modificacoes {
+    display: flex;
+    gap: 20px;
+}
+
+.modificacoes label {
+    width: 65px;
+}
+
+.logicas {
+    display: flex;
+    gap: 20px;
+}
+
+.logicas button {
+    width: 100px;
+}
+
+.box {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.box button {
+    height: 36px;
+    width: 140px;
+}
+
+.realce {
+    display: flex;
+    gap: 20px;
+}
+
+.realce button {
+    width: 150px;
+    height: 36px;
+}
+
+.bordas {
+    display: flex;
+    gap: 20px;
+}
+
+.morfologicas {
+    display: flex;
+    gap: 30px;
+}
+
+#graficos {
+    display: flex;
+}
+
+#graficos div{
+    width: 600px;
+}
+
+.grafico canvas {
+    width: 100px;
+}
+
+.resultado {
+    display: flex;
+    gap: 50px;
 }
