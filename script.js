@@ -102,6 +102,50 @@ function diminuirBrilho() {
     desenharImagem(imageDataArray, contexto, canvas);
 }
 
+function multiplicacao(){
+    const multiplicadorInput = document.getElementById("multiplicador-brilho");
+    const multiplicador = parseFloat(multiplicadorInput.value);
+
+    if (isNaN(multiplicador) || multiplicador <= 0) {
+        alert("Insira um valor válido para a multiplicação.");
+        return;
+    }
+
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let i = 0; i < 3; i++) {
+                imageDataArray[y][x][i] *= multiplicador;
+                if (imageDataArray[y][x][i] > 255) {
+                    imageDataArray[y][x][i] = 255;
+                }
+            }
+        }
+    }
+    desenharImagem(imageDataArray, contexto, canvas);
+}
+
+function divisao() {
+    const divisorInput = document.getElementById("divisor-brilho");
+    const divisor = parseFloat(divisorInput.value);
+
+    if (isNaN(divisor) || divisor <= 0) {
+        alert("Insira um valor válido para a divisão.");
+        return;
+    }
+
+    for (let y = 0; y < imageDataArray.length; y++) {
+        for (let x = 0; x < imageDataArray[y].length; x++) {
+            for (let i = 0; i < 3; i++) {
+                imageDataArray[y][x][i] /= divisor;
+                if (imageDataArray[y][x][i] < 0) {
+                    imageDataArray[y][x][i] = 0;
+                }
+            }
+        }
+    }
+    desenharImagem(imageDataArray, contexto, canvas);
+}
+
 function aplicarNegativo() {
     for (let y = 0; y < imageDataArray.length; y++) {
         for (let x = 0; x < imageDataArray[y].length; x++) {
